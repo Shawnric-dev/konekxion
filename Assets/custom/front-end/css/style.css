@@ -1,0 +1,288 @@
+body{
+	/*background: url("../resouces/imgs/inae_40opacity.png") no-repeat 50% 170px;*/
+}
+
+#modal_subscribe{
+	background: rgba(0, 150, 240, .8);
+}
+
+.top_row_sub{
+	margin-top: 20px;
+}
+
+#btn_open_sub_modal{
+	width: 100%;
+	margin-bottom: 15px;
+}
+
+#lbl_marks_description{
+	margin-bottom: 15 !important;
+}
+
+.search_bar_icon_right{
+	background: transparent;
+	border-left: 20px;
+}
+
+#btn_reg_term, #btn_reg_term_cancel{
+	margin-top: 12px;
+}
+
+.img_pdf{
+	width: 17px;
+}
+
+#btn_print_debts{
+	margin-right: 10px;
+}
+
+#slct_filter_service_state{
+	width: 135px;
+}
+
+.icon_add_img{
+	padding: 0px;
+	border-bottom-left-radius: 0;
+	border-bottom-right-radius: 0;
+}
+
+.btn_add_img{
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+	border-top: 0px;
+	transition: 0.3s;
+}
+
+.btn_add_img:hover{
+	background: rgb(255, 193, 109, 3.0);
+}
+
+.btn_add_img:active{
+	background: rgb(255, 153, 59, 3.0);
+}
+
+/*.btn_icon{
+	display: inline-block;
+}*/
+
+#btn_saldar_prox_propina{
+	width: 100%;
+}
+
+.red-color{color: rgb(250, 0, 0);}
+.green-color{color: rgb(0, 250, 0);}
+
+.lbl_btn_text, .lbl_modal_fees_to_pay_btn_text, .lbl_service_make_payment{
+	display: inline-block;
+}
+
+/*Didnt work*/
+#modal_fee_payment{
+	font: bold;
+}
+
+/*Align text to end txt-r*/
+.txt-r{ 
+	text-align: right;
+}
+
+.table_btn_left{
+	border-top-left-radius: 25px;
+	border-bottom-left-radius: 25px;
+}
+
+.table_btn_right{
+	border-top-right-radius: 25px;
+	border-bottom-right-radius: 25px;	
+}
+
+.table_btn_icon_1{
+	width: 25px;
+	padding: ;
+}
+
+.table_btn_icon_1:hover{
+	width: 31px !important;
+	transition: 0.3s;
+}
+
+.table_btn_icon{
+	width: 18px;
+}
+
+.table_btn_icon:hover {
+	width: 25px !important;
+	transition: 0.3s;
+}
+
+.text-shadow{
+	text-shadow: 1px 1px #204040;
+	/*size: 20px;*/
+	/*color: #000;*/
+}
+
+.btn_addToCart{
+	border-radius: 45px;
+	transition: 0.4s;
+}
+
+.btn_addToCart:hover{
+	background-color: rgb(120, 235, 120);
+}
+
+
+#slct_filter_user_state{
+	width: 150px !important;
+}
+
+/*Floating action Btn*/
+.floating-action-btn{
+	/*background: rgba(60, 250, 60, 0.7);*/
+	position: fixed;
+	bottom: 40px;
+	right: -2px;
+	transition: 0.6s;
+	/*border-radius: 60px;*/
+	border-bottom-left-radius: 60px;
+	border-top-left-radius: 60px;
+	padding: 13px;
+}
+
+.floating-action-text{
+	/*display: none;*/
+	
+	align-content: center;
+	font-size: 16px;
+
+	position: fixed;
+	bottom: 70px;
+	right: -2px;
+
+	padding: 12px;
+	padding-left: 16px;
+	background: #ffd907;/*rgb(240,240,240);*/
+	/*border-bottom-left-radius: 60px;*/
+	border-top-left-radius: 30px;
+	bottom: 1px solid #000;
+}
+
+.floating-action-img{
+	width: 81%;
+	padding-left: 5px;
+}
+
+.red_bg{
+	background-color: rgb(255, 70, 70);
+	color: #fff;
+}
+
+.img_nav_logo{
+	width: 35px;
+	margin-right: 5px;
+	margin-bottom: 5px; 
+}
+
+.mrg_l_12_adjust{
+	padding-left: 0px;
+}
+
+/*-------*/
+
+.table_summary{
+	/*border: 1px solid #eee;*/
+	width: 600px;
+	margin: 12px;
+	/*margin: 0 right;*/
+}
+
+.img_search{
+	margin-right:7px;
+}
+
+.img_excel_extra_small{
+	width: 45px;
+	margin: 6px 15px 6px 5px;
+}
+
+.img_pdf_extra_small{
+	width: 40px;
+	margin: 6px 15px 6px 5px;
+}
+
+
+
+.img_pdf_small{
+	width: 21px;
+	margin: 0px 2px 0px 2px;
+}
+
+.img_pdf_small_row{
+	width: 27px;
+	margin: 6px 6px 6px 6px;
+}
+
+.form-row{
+	margin: 12px 0px 12px 0px;
+	align-content: right;
+}
+
+.panel_settings{
+	width: 600px;
+	padding: 30px;
+}
+
+.water-mark-banner{
+	text-decoration: none;
+	color: #707070;
+	position: fixed;
+	bottom: 0px;
+	right: 0px;
+	transition: 0.3s;
+	/*width: 900px;*/
+	padding-right: 36px;
+	text-align: right;
+	width: 100%;
+	background-color: #ddd;/* #f8f9fa!important */
+	font-size: 15px;
+}
+
+.water-mark-banner:hover{
+	color: #8c0200;
+}
+
+/*Show loding gif start*/
+.overlay{
+	display: none;
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	z-index: 1000;
+	background: rgba(255,255,255,0.8) url("../resouces/imgs/Iphone-spinner-2.gif") center no-repeat;
+}
+
+body.loading .overlay{
+	overflow: hidden;
+}
+
+body.loading .overlay{
+	display: block;
+}
+/*Show loding gif end*/
+
+@media only screen and (max-width: 767px){
+	#lbl_user_full_name{
+		margin-right: 70px;
+	}
+}
+
+@media only screen and (max-width: 575px){
+	.txt-r{ 
+		text-align: left;
+	}
+
+	.panel_settings{
+		width: 100%;
+	}
+}

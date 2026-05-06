@@ -1,0 +1,165 @@
+body{
+	background-color: rgba(0,150,240,0.5);
+	font-family: 'Roboto', sans-serif;
+}
+
+.bg_img{
+	width: 550px;
+/*	width: 40%;*/
+	z-index: -1;
+
+	position: fixed;
+	bottom: 60px;
+	right: 60px;
+
+	opacity: 0.65;
+}
+
+.holder{
+	padding-top: 60px;
+}
+
+.td_confirm_button_box{
+	text-align: right;	
+}
+
+.table_school_reg_form_head{
+	margin: 0 auto;
+	padding-top: 20px;
+}
+
+.img_school_reg_form{
+	width: 100px;
+	margin-right: 20px;
+}
+
+.td_reg{
+	text-align: right;
+	padding-left: 40px;
+}
+
+.table_reg_form{
+	width: 95%;
+	align-content: left;
+}
+
+.smaller_logo{
+	width: 170%;
+}
+
+.img_nav_logo{
+	width: 130px;
+	margin: 0 auto;
+	padding-top: 10px;
+}
+
+.hidden{
+	display: none;
+	background-color: black;
+}
+
+.registration-form{
+	display: none;
+}
+
+.main, .main_reg{
+	width: 300px;
+	background-color: #fff;
+	margin-left: 100px;
+	text-align: center;
+	padding: 15px;
+	border:2px solid #ccc;
+	box-shadow: 0px 0px 120px -45px #000;
+	border-radius: 40px;
+}
+
+.main_reg{
+	width: 600px;
+}
+
+.logo-text{
+	font-family: 'Comic Sans MS', sans-serif;
+	margin-bottom: 40px;
+	margin-top: 3px;
+	color: #dd0c24;
+}
+
+.form-input{
+	font-size: 16px;
+	padding: 10px; 
+	margin: 10px;
+	border:1px solid rgb(160,160,160);
+	width: 85%;
+	transition: 0.3s;
+	border-radius: 30px;
+}
+
+.form-input:hover{
+	outline: 1px solid grey;
+}
+
+.form-input:focus{
+	outline: 1px solid black;
+}
+
+.text-center{
+	text-align: center;
+}
+
+.button-holder, .button-holder-reg{
+	margin-top: 15px;
+	text-align: right;
+}
+
+.button-holder-reg{
+	width: 95%;
+}
+
+.button{
+	border-radius: 6px;
+	padding: 9px;
+	margin: 10px;
+	font-size: 19px;
+	transition: 0.5s;
+}
+
+#lbl_login_error{
+	height: 18px;
+	color: rgb(250, 50, 50);
+	size: 18px;
+}
+
+.btn-login{
+	margin-top: 10px;
+	border:3px solid rgb(0,150,240);
+	border-radius: 30px;
+	padding: 10px 18px 10px 18px;
+	background-color: rgb(0,150,240, 0.5);
+	transition: 0.5s;
+}
+
+.btn-login:hover{
+	background-color: rgba(0,150,240, 0.8);
+}
+
+.btn-login:active{
+	background-color: rgba(0,130,200);
+	transform: translateY(6px);
+}
+
+.water-mark{
+	text-decoration: none;
+	color: rgb(0,0,0,0.6) ;
+	position: fixed;
+	bottom: 0px;
+	right: 30px;
+	font-size: 19px;
+	padding: 10px;
+}
+
+
+@media only screen and (max-width: 575px){
+	.main{
+		margin: 0 auto;
+	}
+}

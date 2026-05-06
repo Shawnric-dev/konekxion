@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="Assets/custom/front-end/resouces/imgs/lg1.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Konekxion | Marketplace com M-Pesa</title>
+  <!-- Google Fonts + Font Awesome -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- Swiper Carousel -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #f4f6fc; color: #0a1c2f; overflow-x: hidden; }
+    .app-layout { display: flex; min-height: 100vh; }
+    
+    /* SIDEBAR */
+    .sidebar {
+      width: 280px;
+      background: linear-gradient(180deg, #0f172a 0%, #0b1120 100%);
+      color: #e2e8f0;
+      transition: width 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+      display: flex;
+      flex-direction: column;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      z-index: 100;
+      box-shadow: 4px 0 24px rgba(0, 0, 0, 0.08);
+      overflow-y: auto;
+      flex-shrink: 0;
+    }
+    .sidebar.collapsed { width: 88px; }
+    .sidebar-header { padding: 1.8rem 1.2rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .logo-area { display: flex; align-items: center; gap: 10px; overflow: hidden; }
+    .logo-icon { font-size: 1.8rem; background: linear-gradient(135deg, #3b82f6, #8b5cf6); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .logo-text { font-weight: 800; font-size: 1.45rem; background: linear-gradient(135deg, #fff, #cbd5e1); -webkit-background-clip: text; background-clip: text; color: transparent; white-space: nowrap; }
+    .sidebar.collapsed .logo-text { display: none; }
+    .collapse-btn { background: rgba(255,255,255,0.08); border: none; color: white; width: 34px; height: 34px; border-radius: 12px; cursor: pointer; }
+    .collapse-btn:hover { background: #3b82f6; }
+    .provider-card { background: rgba(255,255,255,0.05); margin: 1.5rem 1rem; padding: 1rem; border-radius: 20px; }
+    .sidebar.collapsed .provider-card { padding: 0.8rem; text-align: center; }
+    .provider-avatar { width: 48px; height: 48px; background: #3b82f6; border-radius: 30px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 0.6rem; }
+    .sidebar.collapsed .provider-avatar { margin: 0 auto 0.3rem auto; }
+    .provider-name { font-weight: 700; font-size: 1rem; }
+    .sidebar.collapsed .provider-name, .sidebar.collapsed .provider-badge, .sidebar.collapsed .provider-stats { display: none; }
+    .provider-badge { font-size: 0.7rem; background: #2dd4bf20; display: inline-block; padding: 0.2rem 0.6rem; border-radius: 50px; margin-top: 6px; }
+    .nav-menu { flex: 1; margin-top: 0.5rem; }
+    .nav-item { display: flex; align-items: center; gap: 14px; padding: 0.85rem 1.2rem; margin: 0.2rem 0.8rem; border-radius: 14px; cursor: pointer; transition: 0.2s; color: #cbd5e6; }
+    .nav-item i { width: 24px; font-size: 1.2rem; }
+    .sidebar.collapsed .nav-item span { display: none; }
+    .nav-item.active, .nav-item:hover { background: #3b82f6; color: white; }
+    
+    /* MAIN CONTENT */
+    .main-content { flex: 1; padding: 1.8rem 2.5rem; transition: margin-left 0.2s; min-width: 0; max-width: calc(100% - 280px); }
+    .sidebar.collapsed ~ .main-content { max-width: calc(100% - 88px); }
+    .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; flex-wrap: wrap; gap: 1rem; }
+    .page-title h1 { font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #1e293b, #2d3a5e); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .btn-login { background: white; border: 1px solid #3b82f6; padding: 0.6rem 1.4rem; border-radius: 44px; font-weight: 600; cursor: pointer; transition: 0.2s; color: #3b82f6; display: flex; align-items: center; gap: 8px; }
+    .btn-login:hover { background: #3b82f6; color: white; }
+    .user-badge { background: #3b82f6; color: white; padding: 0.5rem 1.2rem; border-radius: 44px; font-weight: 600; display: flex; align-items: center; gap: 8px; cursor: pointer; }
+    .add-service-btn, .register-provider-btn { background: #3b82f6; border: none; padding: 0.7rem 1.6rem; border-radius: 44px; color: white; font-weight: 600; cursor: pointer; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px; }
+    .register-provider-btn { background: #8b5cf6; box-shadow: 0 2px 8px rgba(139,92,246,0.3); }
+    .register-provider-btn:hover { background: #7c3aed; transform: scale(0.98); }
+    
+    /* MODALS */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 2000; display: none; align-items: center; justify-content: center; }
+    .modal-container { background: white; border-radius: 40px; max-width: 480px; width: 90%; padding: 2rem; text-align: center; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.3); animation: fadeInUp 0.2s ease; max-height: 90vh; overflow-y: auto; }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .modal-container h2 { margin-bottom: 0.5rem; }
+    .modal-container p { color: #475569; margin-bottom: 1rem; }
+    .form-group { text-align: left; margin-bottom: 1.2rem; }
+    .form-group label { font-weight: 600; display: block; margin-bottom: 0.3rem; color: #1e293b; }
+    .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 0.8rem 1rem; border: 2px solid #e2e8f0; border-radius: 28px; font-family: inherit; transition: 0.2s; }
+    .form-group input:focus, .form-group textarea:focus { outline: none; border-color: #3b82f6; }
+    .role-buttons { display: flex; gap: 1rem; margin: 1rem 0; }
+    .role-btn { flex: 1; padding: 1rem; border-radius: 60px; border: 2px solid #e2e8f0; background: white; font-weight: 700; cursor: pointer; transition: 0.2s; }
+    .role-btn.provider { border-color: #3b82f6; color: #3b82f6; }
+    .role-btn.client { border-color: #8b5cf6; color: #8b5cf6; }
+    .role-btn.selected { background: #3b82f6; color: white; border-color: #3b82f6; }
+    .role-btn.client.selected { background: #8b5cf6; border-color: #8b5cf6; }
+    .login-submit, .modal-btn { background: #3b82f6; width: 100%; padding: 0.9rem; border: none; border-radius: 60px; color: white; font-weight: 700; font-size: 1rem; cursor: pointer; margin-top: 0.5rem; }
+    .close-modal { margin-top: 1rem; background: none; border: none; color: #94a3b8; cursor: pointer; font-size: 0.9rem; }
+    
+    /* M-Pesa specific modal styles */
+    .mpesa-icon { background: #4CAF50; width: 60px; height: 60px; border-radius: 30px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-size: 2rem; color: white; }
+    .phone-preview { background: #f0fdf4; border-radius: 20px; padding: 0.8rem; margin: 1rem 0; border-left: 4px solid #4CAF50; text-align: left; }
+    .mpesa-note { font-size: 0.75rem; color: #2d3a5e; margin-top: 0.5rem; }
+    
+    /* CARDS & GRID */
+    .carousel-section { background: white; border-radius: 32px; padding: 0.8rem; margin-bottom: 2rem; box-shadow: 0 8px 24px rgba(0,0,0,0.04); }
+    .swiper { width: 100%; height: 320px; border-radius: 28px; overflow: hidden; }
+    .swiper-slide { background-size: cover; background-position: center; display: flex; align-items: flex-end; }
+    .slide-overlay { background: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 100%); width: 100%; padding: 2rem; color: white; }
+    .services-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.8rem; }
+    .service-card { background: white; border-radius: 28px; overflow: hidden; transition: 0.25s; border: 1px solid #eef2ff; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+    .service-card:hover { transform: translateY(-5px); box-shadow: 0 24px 32px -12px rgba(0,0,0,0.12); }
+    .card-img { height: 210px; background-size: cover; background-position: center; position: relative; }
+    .service-category { position: absolute; top: 14px; left: 14px; background: rgba(0,0,0,0.75); backdrop-filter: blur(6px); color: white; padding: 0.3rem 1rem; border-radius: 60px; font-size: 0.75rem; font-weight: 600; }
+    .card-content { padding: 1.2rem; }
+    .service-title { font-weight: 800; font-size: 1.2rem; }
+    .price { font-weight: 800; font-size: 1.35rem; color: #0f172a; margin: 0.6rem 0; }
+    .price::before { content: "MT "; font-weight: 600; }
+    .request-btn, .status-badge { width: 100%; padding: 0.75rem; border-radius: 44px; font-weight: 600; text-align: center; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .request-btn { background: #f1f5f9; }
+    .request-btn:hover { background: #3b82f6; color: white; }
+    .status-pending { background: #fef3c7; color: #b45309; }
+    .status-accepted { background: #dcfce7; color: #15803d; }
+    .status-rejected { background: #fee2e2; color: #b91c1c; }
+    .action-group { display: flex; gap: 8px; margin-top: 8px; }
+    .accept-btn { background: #22c55e; color: white; border: none; padding: 6px 12px; border-radius: 40px; cursor: pointer; font-weight: 600; }
+    .reject-btn { background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 40px; cursor: pointer; font-weight: 600; }
+    .empty-state { text-align: center; padding: 3rem; background: #f8fafc; border-radius: 40px; color: #64748b; }
+    .toast-msg { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); background: #1e293b; color: white; padding: 12px 28px; border-radius: 60px; z-index: 2000; font-weight: 500; white-space: nowrap; max-width: 90vw; }
+    footer { margin-top: 3rem; text-align: center; font-size: 0.8rem; color: #6c7a91; border-top: 1px solid #e2e8f0; padding-top: 1.8rem; }
+    .mobile-menu-btn { display: none; background: #3b82f6; border: none; color: white; width: 44px; height: 44px; border-radius: 16px; cursor: pointer; }
+    .sidebar-overlay { display: none; }
+    .flex-between { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; }
+    .currency-note { font-size: 0.7rem; color: #64748b; margin-left: 4px; }
+    @media (max-width: 768px) {
+      .sidebar { position: fixed; transform: translateX(-100%); transition: transform 0.3s; z-index: 1050; height: 100%; }
+      .sidebar.mobile-visible { transform: translateX(0); }
+      .sidebar-overlay { display: block; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1040; opacity: 0; visibility: hidden; transition: 0.2s; }
+      .sidebar-overlay.active { opacity: 1; visibility: visible; }
+      .mobile-menu-btn { display: flex; align-items: center; justify-content: center; }
+      .collapse-btn { display: none; }
+      .main-content { max-width: 100% !important; padding: 1rem; }
+      .swiper { height: 220px; }
+    }
+
+    .nav_logo{
+      width: 40px;
+    }
+  </style>
+</head>
+<body>
+<div class="app-layout">
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-area">
+
+        <!-- <i class="fas fa-handshake logo-icon">  </i><span class="logo-text">Konekxion</span> -->
+        <img class="nav_logo" src="Assets/custom/front-end/resouces/imgs/lg1.png"> <span class="logo-text">Konekxion</span>
+      </div>
+      <button class="collapse-btn" id="collapseToggle"><i class="fas fa-chevron-left"></i></button>
+    </div>
+    <div class="provider-card"><div class="provider-avatar"><i class="fas fa-store"></i></div><div class="provider-name" id="sidebarUserName">Visitante</div><div class="provider-badge" id="sidebarUserRole"></div><div class="provider-stats"><i class="fas fa-clipboard-list"></i> <span id="statListings">0</span> ativos</div></div>
+    <div class="nav-menu"><div class="nav-item active" data-tab="feed"><i class="fas fa-store"></i> <span>Feed de Serviços</span></div><div class="nav-item provider-only" data-tab="my-services" style="display:none;"><i class="fas fa-tools"></i> <span>Meus Serviços</span></div><div class="nav-item provider-only" data-tab="requests" style="display:none;"><i class="fas fa-inbox"></i> <span>Solicitações</span></div><div class="nav-item client-only" data-tab="my-requests" style="display:none;"><i class="fas fa-clock"></i> <span>Minhas Solicitações</span></div><div class="nav-item" data-tab="analytics"><i class="fas fa-chart-line"></i> <span>Estatísticas</span></div></div>
+    <div style="padding: 1rem; margin-top: auto; border-top: 1px solid rgba(255,255,255,0.05);"><div class="nav-item" data-tab="profile"><i class="fas fa-user-cog"></i> <span>Meu Perfil</span></div></div>
+  </aside>
+
+  <div class="main-content">
+    <div class="top-bar">
+      <div style="display: flex; align-items: center; gap: 12px;"><button class="mobile-menu-btn" id="mobileMenuToggle"><i class="fas fa-bars"></i></button><div class="page-title"><h1>Konekxion <span style="color:#3b82f6;">| Hub de Serviços</span></h1><p>Conecte-se com prestadores e clientes em Moçambique | Pagamentos M-Pesa</p></div></div>
+      <div style="display: flex; gap: 12px;"><button id="registerProviderBtn" class="register-provider-btn" style="display: none;"><i class="fas fa-chalkboard-user"></i> Tornar-se Prestador</button><button id="authButton" class="btn-login"><i class="fas fa-sign-in-alt"></i> Entrar</button></div>
+    </div>
+
+    <div class="carousel-section"><div class="swiper mySwiper"><div class="swiper-wrapper"><div class="swiper-slide" style="background-image: url('https://images.unsplash.com/photo-1487754180451-c456f719a1fc?w=1200&h=500&fit=crop');"><div class="slide-overlay"><h3><i class="fas fa-car"></i> Mecânico Profissional</h3><p>Manutenção completa e diagnósticos.</p></div></div><div class="swiper-slide" style="background-image: url('https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=1200&h=500&fit=crop');"><div class="slide-overlay"><h3><i class="fas fa-paint-roller"></i> Pintor Master</h3><p>Acabamentos premium e pintura residencial.</p></div></div><div class="swiper-slide" style="background-image: url('https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?w=1200&h=500&fit=crop');"><div class="slide-overlay"><h3><i class="fas fa-hard-hat"></i> Construtor Experiente</h3><p>Reformas e construções sob medida.</p></div></div></div><div class="swiper-button-next"></div><div class="swiper-button-prev"></div><div class="swiper-pagination"></div></div></div>
+
+    <div id="feedTab"><div class="section-header"><h2><i class="fas fa-fire"></i> Serviços Disponíveis</h2></div><div id="servicesGrid" class="services-grid"></div></div>
+    <div id="myServicesTab" style="display: none;"><div class="flex-between"><h2><i class="fas fa-tools"></i> Meus Serviços</h2><button class="add-service-btn" id="addMyServiceBtn"><i class="fas fa-plus"></i> Adicionar Serviço</button></div><div id="myServicesGrid" class="services-grid"></div></div>
+    <div id="requestsTab" style="display: none;"><div class="section-header"><h2><i class="fas fa-inbox"></i> Solicitações Recebidas</h2></div><div id="requestsList" class="services-grid"></div></div>
+    <div id="myRequestsTab" style="display: none;"><div class="section-header"><h2><i class="fas fa-list-ul"></i> Minhas Solicitações</h2></div><div id="clientRequestsList" class="services-grid"></div></div>
+    <div id="analyticsTab" style="display: none;"><div class="section-header"><h2><i class="fas fa-chart-simple"></i> Estatísticas</h2></div><div style="background: white; border-radius: 32px; padding: 2rem; text-align: center;"><i class="fas fa-chart-line fa-3x" style="color:#3b82f6;"></i><p style="margin-top:1rem;">Total de solicitações: <strong id="totalRequestsCount">0</strong> | Seu conteúdo: <strong id="activeListingsCount">0</strong></p><p class="currency-note" style="margin-top:0.5rem;">Todos os valores em Metical (MT) | Pagamentos M-Pesa</p></div></div>
+    <div id="profileTab" style="display: none;"><div style="background: white; border-radius: 32px; padding: 2rem;"><h3><i class="fas fa-id-card"></i> Perfil</h3><div id="profileInfo"></div></div></div>
+    <footer><i class="fas fa-handshake"></i> Konekxion – Conectando talentos e clientes em Moçambique | Moeda: Metical (MT) | Pagamento via M-Pesa</footer>
+  </div>
+</div>
+
+<!-- MODAL LOGIN -->
+<div class="modal-overlay" id="loginModal"><div class="modal-container"><i class="fas fa-handshake fa-2x" style="color:#3b82f6;"></i><h2>Acessar Konekxion</h2><p>Escolha seu perfil para demonstração</p><div class="role-buttons"><button class="role-btn provider" id="roleProvider">👨‍🔧 Prestador</button><button class="role-btn client" id="roleClient">👤 Cliente</button></div><div class="demo-info" style="background:#f1f5f9; border-radius: 20px; padding: 0.8rem; font-size:0.8rem;"><i class="fas fa-database"></i> <strong>Modo Demonstração</strong><br>• Prestador: Serviços Elite (gerencie serviços)<br>• Cliente: Ana Souza (solicite serviços)<br>• Pagamento via M-Pesa será solicitado</div><button id="confirmLoginBtn" class="login-submit"><i class="fas fa-arrow-right-to-bracket"></i> Entrar</button><button class="close-modal" id="closeModalBtn">Fechar</button></div></div>
+
+<!-- MODAL CADASTRO PRESTADOR -->
+<div class="modal-overlay" id="registerProviderModal"><div class="modal-container"><i class="fas fa-chalkboard-user fa-2x" style="color:#8b5cf6;"></i><h2>Tornar-se Prestador</h2><p>Expanda seu negócio na Konekxion</p><div class="form-group"><label>Nome da empresa/profissional</label><input type="text" id="providerCompanyName" placeholder="Ex: Serviços Elite" value="Meu Negócio"></div><div class="form-group"><label>Email de contato</label><input type="email" id="providerEmail" placeholder="contato@meunegocio.com" value="profissional@konekxion.com"></div><div class="form-group"><label>Especialidade principal</label><select id="providerSpecialty"><option value="Mecânico">Mecânico</option><option value="Pintor">Pintor</option><option value="Construtor">Construtor</option><option value="Eletricista">Eletricista</option><option value="Jardineiro">Jardineiro</option></select></div><div class="form-group"><label>Descrição rápida</label><textarea id="providerBio" rows="2" placeholder="Descreva seus serviços..."></textarea></div><button id="confirmRegisterProviderBtn" class="login-submit" style="background:#8b5cf6;"><i class="fas fa-star-of-life"></i> Registrar como Prestador</button><button class="close-modal" id="closeRegisterModalBtn">Cancelar</button></div></div>
+
+<!-- MODAL M-PESA: Solicitar Número de Telefone -->
+<div class="modal-overlay" id="mpesaModal">
+  <div class="modal-container">
+    <div class="mpesa-icon">
+      <i class="fas fa-mobile-alt"></i>
+    </div>
+    <h2><i class="fas fa-comment-dollar"></i> Pagamento M-Pesa</h2>
+    <p>Para solicitar este serviço, precisamos do seu número M-Pesa para processamento do pagamento seguro.</p>
+    <div class="phone-preview">
+      <i class="fas fa-info-circle" style="color:#4CAF50;"></i> 
+      <strong>Valor do serviço:</strong> <span id="mpesaServicePrice">0 MT</span>
+      <br>
+      <i class="fas fa-store"></i> <strong>Prestador:</strong> <span id="mpesaProviderName"></span>
+    </div>
+    <div class="form-group">
+      <label><i class="fas fa-phone"></i> Número de telefone M-Pesa</label>
+      <input type="tel" id="mpesaPhoneNumber" placeholder="84XXXXXXX ou 85XXXXXXX" value="841234567">
+      <small class="mpesa-note">Formato: 84 1234567 (Moçambique)</small>
+    </div>
+
+    
+    <div class="form-group">
+      <label><i class="fas fa-money-bill-wave"></i> Valor em Metical (MZN)</label>
+      <input type="number" id="mpesaAmount" placeholder="0.00" step="0.01" min="0" value="0.00" style="font-size: 1.1rem; font-weight: 600;">
+      <small class="mpesa-note">
+        <i class="fas fa-info-circle"></i> Digite o valor em Metical (MT) - Moeda oficial de Moçambique
+      </small>
+    </div>
+
+    <!-- <div class="form-group d-none">
+      <label><i class="fas fa-user-check"></i> Nome completo (conta M-Pesa)</label>
+      <input type="text" id="mpesaFullName" placeholder="Nome conforme documento">
+    </div> -->
+    <button id="confirmMpesaBtn" class="login-submit" style="background:#4CAF50;"><i class="fab fa-amazon-pay"></i> Confirmar e Solicitar</button>
+    <button class="close-modal" id="closeMpesaModalBtn">Cancelar</button>
+  </div>
+</div>
+
+<script>
+  // ==================== DATA ====================
+  const serviceImages = ["https://images.unsplash.com/photo-1487754180451-c456f719a1fc?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1581141849291-1125c7b892b4?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=600&h=400&fit=crop","https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=600&h=400&fit=crop"];
+  
+  let currentUser = { type: null, name: "", email: "", isProvider: false, providerData: null, mpesaNumber: null };
+  
+  let myServices = [ 
+    { id: "s1", title: "Revisão Completa de Carro", category: "Mecânico", description: "Diagnóstico e troca de óleo.", price: 4200, imageIdx: 1, provider: "Serviços Elite" }, 
+    { id: "s2", title: "Pintura Interna Premium", category: "Pintor", description: "Tinta acrílica e acabamento liso.", price: 8900, imageIdx: 2, provider: "Serviços Elite" }, 
+    { id: "s3", title: "Consultoria para Reforma", category: "Construtor", description: "Projeto estrutural e orçamento.", price: 5500, imageIdx: 3, provider: "Serviços Elite" } 
+  ];
+  let providerRequests = [ 
+    { id: "req1", serviceId: "s1", serviceTitle: "Revisão Completa de Carro", clientName: "Ana Souza", clientEmail: "ana@email.com", message: "Preciso de revisão no meu Honda Civic.", status: "pending", price: 4200, clientPhone: "841234567" }, 
+    { id: "req2", serviceId: "s2", serviceTitle: "Pintura Interna Premium", clientName: "Carlos Lima", clientEmail: "carlos@email.com", message: "Quero pintar a sala inteira.", status: "pending", price: 8900, clientPhone: "850000001" } 
+  ];
+  let globalServices = [ 
+    { id: "g1", title: "Troca de Pastilhas de Freio", category: "Mecânico", description: "Freios novos, segurança máxima.", price: 3200, imageIdx: 0, provider: "AutoGurus" }, 
+    { id: "g2", title: "Textura Decorativa", category: "Pintor", description: "Textura e revestimento especial.", price: 5400, imageIdx: 4, provider: "Pincel&Rolo Pro" }, 
+    { id: "g3", title: "Construção de Deck", category: "Construtor", description: "Deck de madeira ecológica.", price: 15800, imageIdx: 3, provider: "Construmaster" }, 
+    { id: "g4", title: "Manutenção de Ar Condicionado", category: "Mecânico", description: "Limpeza e recarga de gás.", price: 2100, imageIdx: 0, provider: "ChillFix" } 
+  ];
+  let clientRequestsMade = [ 
+    { id: "c1", serviceTitle: "Troca de Pastilhas de Freio", serviceId: "g1", provider: "AutoGurus", price: 3200, status: "accepted", message: "Solicitado", clientPhone: "841234567" }, 
+    { id: "c2", serviceTitle: "Consultoria para Reforma", serviceId: "s3", provider: "Serviços Elite", price: 5500, status: "pending", message: "Aguardando resposta", clientPhone: "841234567" } 
+  ];
+
+  let pendingServiceRequest = null; // store request details before MPesa confirmation
+
+  function saveToLocal() { localStorage.setItem('konexion_data', JSON.stringify({ myServices, providerRequests, clientRequestsMade, currentUser, globalServices })); }
+  function loadFromLocal() { try { let d = JSON.parse(localStorage.getItem('konexion_data')); if(d) { myServices = d.myServices; providerRequests = d.providerRequests; clientRequestsMade = d.clientRequestsMade; currentUser = d.currentUser || { type: null, name: "" }; globalServices = d.globalServices || globalServices; } } catch(e) {} }
+
+  function showToast(msg) { let t = document.querySelector('.toast-msg'); if(t) t.remove(); let toast = document.createElement('div'); toast.className = 'toast-msg'; toast.innerHTML = `<i class="fas fa-info-circle"></i> ${msg}`; document.body.appendChild(toast); setTimeout(() => toast.remove(), 2600); }
+  function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+  function getServiceImage(idx) { return serviceImages[idx % serviceImages.length]; }
+  function formatPrice(price) { return `${price.toLocaleString('pt-MZ')}`; }
+
+  // M-Pesa Modal Logic
+  function openMpesaModal(serviceTitle, price, providerName, serviceId) {
+    document.getElementById('mpesaServicePrice').innerText = `${formatPrice(price)} MT`;
+    document.getElementById('mpesaProviderName').innerText = providerName;
+    pendingServiceRequest = { serviceTitle, price, providerName, serviceId };
+    document.getElementById('mpesaModal').style.display = 'flex';
+  }
+  function closeMpesaModal() { document.getElementById('mpesaModal').style.display = 'none'; pendingServiceRequest = null; }
+  function confirmMpesaPayment() {
+    let phone = document.getElementById('mpesaPhoneNumber').value.trim();
+    let fullName = document.getElementById('mpesaFullName').value.trim();
+    if(!phone) { showToast("Por favor, insira o número M-Pesa."); return; }
+    if(!fullName) { showToast("Por favor, insira o nome completo do titular da conta M-Pesa."); return; }
+    if(!/^[0-9]{9}$/.test(phone) && !/^84[0-9]{7}$/.test(phone) && !/^85[0-9]{7}$/.test(phone)) showToast("Número inválido! Use formato 84XXXXXXX ou 85XXXXXXX (9 dígitos).");
+    else {
+      // Simulate M-Pesa charge request
+      showToast(`🔐 Processando pagamento M-Pesa para ${fullName} (${phone}) no valor de ${formatPrice(pendingServiceRequest.price)} MT...`);
+      setTimeout(() => {
+        // After successful payment simulation, create request
+        // if(clientRequestsMade.some(r => r.serviceTitle === pendingServiceRequest.serviceTitle && r.provider === pendingServiceRequest.providerName && r.status === 'pending')) { 
+        //   showToast("Você já solicitou este serviço!"); closeMpesaModal(); return; 
+        // }
+        let newReq = { 
+          id: "req_"+Date.now(), 
+          serviceTitle: pendingServiceRequest.serviceTitle, 
+          serviceId: pendingServiceRequest.serviceId, 
+          provider: pendingServiceRequest.providerName, 
+          price: pendingServiceRequest.price, 
+          status: "pending", 
+          message: "Solicitado via M-Pesa", 
+          clientPhone: phone,
+          clientName: currentUser.name || "Cliente"
+        };
+        clientRequestsMade.push(newReq);
+        // Also add to provider's requests if provider exists
+        let providerReq = {
+          id: "prov_"+Date.now(),
+          serviceId: pendingServiceRequest.serviceId,
+          serviceTitle: pendingServiceRequest.serviceTitle,
+          clientName: currentUser.name || "Cliente",
+          clientEmail: currentUser.email || "cliente@konekxion.com",
+          message: `Solicitado via M-Pesa. Pagamento reservado. Telefone: ${phone}`,
+          status: "pending",
+          price: pendingServiceRequest.price,
+          clientPhone: phone
+        };
+        providerRequests.push(providerReq);
+        showToast(`✅ Pagamento M-Pesa autorizado! Solicitação enviada para ${pendingServiceRequest.providerName}.`);
+        closeMpesaModal();
+        renderAll();
+        if(document.getElementById('myRequestsTab')?.style.display === 'block') renderClientRequests();
+        if(document.getElementById('requestsTab')?.style.display === 'block') renderProviderRequests();
+        document.getElementById('mpesaPhoneNumber').value = "";
+        document.getElementById('mpesaFullName').value = "";
+      }, 1200);
+    }
+  }
+
+  function renderAll() {
+    const isProviderActive = currentUser.type === 'provider';
+    const isClientActive = currentUser.type === 'client';
+    
+    if(isProviderActive) {
+      renderServices('servicesGrid', [...globalServices, ...myServices], true);
+      renderMyServices(); renderProviderRequests();
+      document.querySelectorAll('.provider-only').forEach(el => el.style.display = 'flex');
+      document.querySelectorAll('.client-only').forEach(el => el.style.display = 'none');
+      document.getElementById('sidebarUserName').innerText = currentUser.name || "Serviços Elite";
+      document.getElementById('sidebarUserRole').innerHTML = '<i class="fas fa-tools"></i> Prestador';
+      document.getElementById('statListings').innerText = myServices.length;
+      document.getElementById('activeListingsCount').innerText = myServices.length;
+      document.getElementById('totalRequestsCount').innerText = providerRequests.length;
+      document.getElementById('profileInfo').innerHTML = `<strong>Nome:</strong> ${currentUser.name}<br><strong>Email:</strong> ${currentUser.email || "contato@konexion.pro"}<br><strong>Tipo:</strong> Prestador de Serviços<br><strong>M-Pesa Registado:</strong> ${currentUser.mpesaNumber || "Não vinculado"}<br><strong>Moeda:</strong> Metical (MT)`;
+      document.getElementById('registerProviderBtn').style.display = 'none';
+    } else if(isClientActive) {
+      renderServices('servicesGrid', [...globalServices, ...myServices], false);
+      renderClientRequests();
+      document.querySelectorAll('.provider-only').forEach(el => el.style.display = 'none');
+      document.querySelectorAll('.client-only').forEach(el => el.style.display = 'flex');
+      document.getElementById('sidebarUserName').innerText = currentUser.name || "Ana Souza";
+      document.getElementById('sidebarUserRole').innerHTML = '<i class="fas fa-user"></i> Cliente';
+      document.getElementById('statListings').innerText = clientRequestsMade.length;
+      document.getElementById('activeListingsCount').innerText = clientRequestsMade.length;
+      document.getElementById('totalRequestsCount').innerText = clientRequestsMade.length;
+      document.getElementById('profileInfo').innerHTML = `<strong>Nome:</strong> ${currentUser.name}<br><strong>Email:</strong> ${currentUser.email || "cliente@konexion.com"}<br><strong>Tipo:</strong> Cliente<br><strong>M-Pesa Padrão:</strong> ${currentUser.mpesaNumber || "Não definido"}<br><strong>Moeda:</strong> Metical (MT)<br><button id="upgradeToProviderBtn" class="register-provider-btn" style="margin-top:1rem; background:#8b5cf6;"><i class="fas fa-chalkboard-user"></i> Quero ser Prestador</button>`;
+      document.getElementById('registerProviderBtn').style.display = 'flex';
+      const upgradeBtn = document.getElementById('upgradeToProviderBtn');
+      if(upgradeBtn) upgradeBtn.onclick = () => openRegisterModal();
+    } else {
+      renderServices('servicesGrid', [...globalServices, ...myServices], false);
+      document.querySelectorAll('.provider-only, .client-only').forEach(el => el.style.display = 'none');
+      document.getElementById('sidebarUserName').innerText = "Visitante";
+      document.getElementById('sidebarUserRole').innerHTML = '';
+      document.getElementById('statListings').innerText = '0';
+      document.getElementById('profileInfo').innerHTML = `<p>Faça login para acessar todos os recursos.</p><p class="currency-note">Pagamentos seguros via M-Pesa</p>`;
+      document.getElementById('registerProviderBtn').style.display = 'none';
+    }
+    updateAnalyticsUI();
+    saveToLocal();
+  }
+
+  function renderServices(containerId, servicesArray, isProviderView = false) {
+    const container = document.getElementById(containerId);
+    if(!container) return;
+    if(!servicesArray.length) { container.innerHTML = `<div class="empty-state"><i class="fas fa-store"></i><p>Nenhum serviço disponível.</p></div>`; return; }
+    container.innerHTML = servicesArray.map(service => {
+      const isOwner = currentUser.type === 'provider' && service.provider === currentUser.name;
+      return `<div class="service-card"><div class="card-img" style="background-image: url('${getServiceImage(service.imageIdx)}');"><span class="service-category">${service.category}</span></div><div class="card-content"><div class="service-title">${escapeHtml(service.title)}</div><div class="service-desc">${escapeHtml(service.description)}</div><div class="price">${formatPrice(service.price)}</div>${(!isOwner && currentUser.type === 'client') ? `<button class="request-btn request-service-action" data-id="${service.id}" data-title="${escapeHtml(service.title)}" data-price="${service.price}" data-provider="${service.provider}"><i class="fab fa-amazon-pay"></i> Solicitar com M-Pesa</button>` : (isOwner ? `<button class="request-btn" style="background:#eef2ff;" disabled><i class="fas fa-check-circle"></i> Seu serviço</button>` : `<button class="request-btn" disabled style="opacity:0.5;"><i class="fas fa-lock"></i> Faça login</button>`)}</div></div>`;
+    }).join('');
+    if(currentUser.type === 'client') {
+      document.querySelectorAll('.request-service-action').forEach(btn => btn.addEventListener('click', (e) => {
+        let title = btn.getAttribute('data-title'), price = parseInt(btn.getAttribute('data-price')), provider = btn.getAttribute('data-provider'), serviceId = btn.getAttribute('data-id');
+        //if(clientRequestsMade.some(r => r.serviceTitle === title && r.provider === provider && r.status === 'pending')) { showToast("Você já solicitou este serviço!"); return; }
+        // Open M-Pesa modal to collect phone and name before request
+        openMpesaModal(title, price, provider, serviceId);
+      }));
+    }
+  }
+
+  function renderMyServices() { const c = document.getElementById('myServicesGrid'); if(!c) return; if(!myServices.length) { c.innerHTML = `<div class="empty-state"><i class="fas fa-plus-circle"></i><p>Adicione serviços</p></div>`; return; } c.innerHTML = myServices.map(s => `<div class="service-card"><div class="card-img" style="background-image: url('${getServiceImage(s.imageIdx)}');"><span class="service-category">${s.category}</span></div><div class="card-content"><div class="service-title">${escapeHtml(s.title)}</div><div class="price">${formatPrice(s.price)}</div><button class="request-btn delete-service" data-id="${s.id}" style="background:#fee2e2; color:#b91c1c;"><i class="fas fa-trash-alt"></i> Remover</button></div></div>`); document.querySelectorAll('.delete-service').forEach(btn => btn.addEventListener('click', (e) => { myServices = myServices.filter(s => s.id !== btn.getAttribute('data-id')); renderAll(); showToast("Serviço removido"); })); }
+  
+  function renderProviderRequests() { const container = document.getElementById('requestsList'); if(!container) return; if(!providerRequests.length) { container.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><p>Nenhuma solicitação</p></div>`; return; } container.innerHTML = providerRequests.map(req => `<div class="service-card"><div class="card-content"><div class="service-title">📩 ${escapeHtml(req.serviceTitle)}</div><div class="service-desc"><strong>Cliente:</strong> ${escapeHtml(req.clientName)}<br>📞 M-Pesa: ${req.clientPhone || 'N/A'}<br>${escapeHtml(req.message)}</div><div class="price">${formatPrice(req.price)}</div><div class="status-badge ${req.status === 'pending' ? 'status-pending' : (req.status === 'accepted' ? 'status-accepted' : 'status-rejected')}">${req.status === 'pending' ? '⏳ Pendente' : (req.status === 'accepted' ? '✅ Aceito' : '❌ Recusado')}</div>${req.status === 'pending' ? `<div class="action-group"><button class="accept-btn" data-id="${req.id}"><i class="fas fa-check"></i> Aceitar</button><button class="reject-btn" data-id="${req.id}"><i class="fas fa-times"></i> Recusar</button></div>` : ''}</div></div>`); document.querySelectorAll('.accept-btn').forEach(btn => btn.addEventListener('click', (e) => { let id = btn.getAttribute('data-id'); let req = providerRequests.find(r => r.id === id); if(req) { req.status = 'accepted'; let found = clientRequestsMade.find(r => r.serviceTitle === req.serviceTitle && r.provider === currentUser.name); if(found) found.status = 'accepted'; renderAll(); showToast(`✅ Solicitação aceita! Pagamento M-Pesa será processado.`); } })); document.querySelectorAll('.reject-btn').forEach(btn => btn.addEventListener('click', (e) => { let id = btn.getAttribute('data-id'); let req = providerRequests.find(r => r.id === id); if(req) { req.status = 'rejected'; let found = clientRequestsMade.find(r => r.serviceTitle === req.serviceTitle && r.provider === currentUser.name); if(found) found.status = 'rejected'; renderAll(); showToast("Solicitação recusada."); } })); }
+  
+  function renderClientRequests() { const container = document.getElementById('clientRequestsList'); if(!container) return; if(!clientRequestsMade.length) { container.innerHTML = `<div class="empty-state"><i class="fas fa-hourglass-half"></i><p>Nenhuma solicitação</p></div>`; return; } container.innerHTML = clientRequestsMade.map(req => `<div class="service-card"><div class="card-content"><div class="service-title">${escapeHtml(req.serviceTitle)}</div><div class="service-desc"><strong>Prestador:</strong> ${escapeHtml(req.provider)}<br>📱 Pagamento via M-Pesa: ${req.clientPhone ? req.clientPhone : 'Número salvo'}</div><div class="price">${formatPrice(req.price)}</div><div class="status-badge ${req.status === 'pending' ? 'status-pending' : (req.status === 'accepted' ? 'status-accepted' : 'status-rejected')}">${req.status === 'pending' ? '⏳ Aguardando' : (req.status === 'accepted' ? '✅ Aceito' : '❌ Recusado')}</div></div></div>`); }
+  
+  function updateAnalyticsUI() { if(currentUser.type === 'provider') document.getElementById('totalRequestsCount').innerText = providerRequests.length; else if(currentUser.type === 'client') document.getElementById('totalRequestsCount').innerText = clientRequestsMade.length; else document.getElementById('totalRequestsCount').innerText = '0'; }
+  
+  function addNewService() { if(currentUser.type !== 'provider') { showToast("Apenas prestadores podem adicionar serviços."); return; } let title = prompt("Título do serviço:"); if(!title) return; let cat = prompt("Categoria (Mecânico, Pintor, Construtor, Eletricista, Jardineiro):", "Mecânico"); let desc = prompt("Descrição do serviço:"); let price = parseFloat(prompt("Preço em Metical (MT):", "2500")); if(isNaN(price)) return; myServices.push({ id: "svc_"+Date.now(), title, category: cat || "Geral", description: desc || "Serviço de qualidade", price: price, imageIdx: Math.floor(Math.random()*serviceImages.length), provider: currentUser.name }); renderAll(); showToast(`"${title}" adicionado por ${formatPrice(price)}!`); }
+
+  function openRegisterModal() { document.getElementById('registerProviderModal').style.display = 'flex'; }
+  function closeRegisterModal() { document.getElementById('registerProviderModal').style.display = 'none'; }
+  function confirmRegisterProvider() {
+    let company = document.getElementById('providerCompanyName').value.trim();
+    let email = document.getElementById('providerEmail').value.trim();
+    let specialty = document.getElementById('providerSpecialty').value;
+    let bio = document.getElementById('providerBio').value;
+    if(!company) { showToast("Digite o nome da empresa"); return; }
+    currentUser.type = 'provider';
+    currentUser.name = company;
+    currentUser.email = email;
+    currentUser.isProvider = true;
+    currentUser.providerData = { specialty, bio };
+    myServices = [];
+    providerRequests = [];
+    renderAll();
+    closeRegisterModal();
+    showToast(`Parabéns! ${company} agora é prestador na Konekxion. Aceite pagamentos M-Pesa.`);
+    switchTab('my-services');
+  }
+
+  function switchTab(tabId) {
+    ['feedTab','myServicesTab','requestsTab','analyticsTab','profileTab','myRequestsTab'].forEach(id => { let el = document.getElementById(id); if(el) el.style.display = 'none'; });
+    if(tabId === 'feed') document.getElementById('feedTab').style.display = 'block';
+    if(tabId === 'my-services' && currentUser.type === 'provider') { document.getElementById('myServicesTab').style.display = 'block'; renderMyServices(); }
+    if(tabId === 'requests' && currentUser.type === 'provider') { document.getElementById('requestsTab').style.display = 'block'; renderProviderRequests(); }
+    if(tabId === 'my-requests' && currentUser.type === 'client') { document.getElementById('myRequestsTab').style.display = 'block'; renderClientRequests(); }
+    if(tabId === 'analytics') { document.getElementById('analyticsTab').style.display = 'block'; updateAnalyticsUI(); }
+    if(tabId === 'profile') document.getElementById('profileTab').style.display = 'block';
+    document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+    document.querySelector(`.nav-item[data-tab="${tabId}"]`)?.classList.add('active');
+    if(window.innerWidth <= 768) closeMobileSidebar();
+  }
+
+  // MODAL LOGIN
+  const loginModal = document.getElementById('loginModal'), registerModal = document.getElementById('registerProviderModal');
+  let selectedRole = 'provider';
+  function openLoginModal() { loginModal.style.display = 'flex'; }
+  function closeLoginModal() { loginModal.style.display = 'none'; }
+  document.getElementById('roleProvider')?.addEventListener('click', () => { selectedRole = 'provider'; document.getElementById('roleProvider').classList.add('selected'); document.getElementById('roleClient').classList.remove('selected'); });
+  document.getElementById('roleClient')?.addEventListener('click', () => { selectedRole = 'client'; document.getElementById('roleClient').classList.add('selected'); document.getElementById('roleProvider').classList.remove('selected'); });
+  document.getElementById('confirmLoginBtn')?.addEventListener('click', () => {
+    if(selectedRole === 'provider') currentUser = { type: 'provider', name: "Serviços Elite", email: "contato@konekxion.pro", isProvider: true, providerData: { specialty: "Mecânico/Pintor/Construtor", bio: "" }, mpesaNumber: "841234567" };
+    else currentUser = { type: 'client', name: "Ana Souza", email: "ana@konekxion.com", isProvider: false, mpesaNumber: "847654321" };
+    closeLoginModal();
+    renderAll();
+    switchTab('feed');
+    showToast(`Bem-vindo, ${currentUser.name}! Pagamentos seguros com M-Pesa disponíveis.`);
+    const authBtn = document.getElementById('authButton');
+    authBtn.innerHTML = `<i class="fas fa-user-circle"></i> ${currentUser.name.split(' ')[0]} <i class="fas fa-chevron-down"></i>`;
+    authBtn.classList.remove('btn-login'); authBtn.classList.add('user-badge');
+  });
+  document.getElementById('closeModalBtn')?.addEventListener('click', closeLoginModal);
+  document.getElementById('closeRegisterModalBtn')?.addEventListener('click', closeRegisterModal);
+  document.getElementById('confirmRegisterProviderBtn')?.addEventListener('click', confirmRegisterProvider);
+  document.getElementById('authButton')?.addEventListener('click', () => { if(currentUser.type) { currentUser = { type: null, name: "" }; renderAll(); const btn = document.getElementById('authButton'); btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar'; btn.classList.remove('user-badge'); btn.classList.add('btn-login'); showToast("Logout efetuado."); } else openLoginModal(); });
+  document.getElementById('registerProviderBtn')?.addEventListener('click', () => { if(!currentUser.type) showToast("Faça login como cliente primeiro."); else if(currentUser.type !== 'client') showToast("Você já é prestador!"); else openRegisterModal(); });
+  document.getElementById('confirmMpesaBtn')?.addEventListener('click', confirmMpesaPayment);
+  document.getElementById('closeMpesaModalBtn')?.addEventListener('click', closeMpesaModal);
+  
+  // Sidebar & Init
+  const sidebar = document.getElementById('sidebar'), overlay = document.getElementById('sidebarOverlay');
+  function closeMobileSidebar() { if(window.innerWidth <= 768) { sidebar.classList.remove('mobile-visible'); overlay.classList.remove('active'); } }
+  function openMobileSidebar() { sidebar.classList.add('mobile-visible'); overlay.classList.add('active'); }
+  document.getElementById('mobileMenuToggle')?.addEventListener('click', openMobileSidebar);
+  overlay.addEventListener('click', closeMobileSidebar);
+  let collapsed = false;
+  document.getElementById('collapseToggle')?.addEventListener('click', () => { if(window.innerWidth > 768) { collapsed = !collapsed; sidebar.classList.toggle('collapsed', collapsed); } });
+  document.querySelectorAll('.nav-item[data-tab]').forEach(el => el.addEventListener('click', () => switchTab(el.getAttribute('data-tab'))));
+  document.getElementById('addMyServiceBtn')?.addEventListener('click', addNewService);
+  loadFromLocal(); renderAll(); switchTab('feed');
+  new Swiper('.mySwiper', { loop: true, autoplay: { delay: 4000, disableOnInteraction: false }, pagination: { el: '.swiper-pagination', clickable: true }, navigation: { nextEl: '.swiper-button-next', prevEl: '.swiper-button-prev' } });
+</script>
+</body>
+</html>
